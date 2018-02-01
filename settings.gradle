@@ -1,1 +1,1 @@
-include ':app', ':router-annotations', ':router-compiler'
+include ':app', ':router-annotations', ':router-compiler', ':router'
