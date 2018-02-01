@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import mrouter.annotations.RouterUri;
+import mrouter.annotations.MrouterUri;
 
 /**
  * 作者： mooney
@@ -12,7 +12,7 @@ import mrouter.annotations.RouterUri;
  * 邮箱： shili_yan@sina.com
  * 描述：
  */
-@RouterUri("second")
+@MrouterUri("second")
 public class SecondActivity extends AppCompatActivity{
 
     @Override

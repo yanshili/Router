@@ -18,17 +18,17 @@ import java.util.Set;
  * 描述：
  */
 
-public enum  Router {
+public enum Mrouter {
     INSTANCE;
 
 
-    private static final String TAG="Router";
+    private static final String TAG="Mrouter";
 
     private Context mContext;
 
     private Map<String, Class> routerCache=new HashMap<>();
 
-    public static Router getInstance(){
+    public static Mrouter getInstance(){
         return INSTANCE;
     }
 
@@ -45,7 +45,7 @@ public enum  Router {
 
     public boolean open(String routerUri, Intent dataIntent){
 
-        if (!RouterHelper.isValidURI(routerUri)){
+        if (!MrouterHelper.isValidURI(routerUri)){
             Log.e(TAG, "router \"" +routerUri+ "\" is invalid uri path!!!");
             return false;
         }
@@ -97,7 +97,7 @@ public enum  Router {
 
     public boolean openForResult(Object context, String routerUri, int requestCode, Intent dataIntent) {
 
-        if (RouterHelper.isValidURI(routerUri)){
+        if (MrouterHelper.isValidURI(routerUri)){
             Log.e(TAG, "router \"" +routerUri+ "\" is invalid uri path!!!");
             return false;
         }
@@ -181,7 +181,7 @@ public enum  Router {
 
         if (activityClz == null){
             try {
-                activityClz= RouterHelper.reflectActivity(router);
+                activityClz= MrouterHelper.reflectActivity(router);
             } catch (Exception e) {
                 Log.e(TAG, "Errors of reflecting the activity of the router \""+router+"\"!!!\n"+e);
                 return null;

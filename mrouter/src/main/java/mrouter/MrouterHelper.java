@@ -4,7 +4,7 @@ import android.net.Uri;
 
 import java.lang.reflect.Method;
 
-import mrouter.compiler.RouterProcessor;
+import mrouter.compiler.MrouterProcessor;
 
 /**
  * 作者： mooney
@@ -13,12 +13,12 @@ import mrouter.compiler.RouterProcessor;
  * 描述：
  */
 
-class RouterHelper {
+class MrouterHelper {
 
     public static Class reflectActivity(String router) throws Exception{
         String path=Uri.parse(router).getPath();
         String clzName = path.substring(1, path.indexOf("/", 1));
-        String cacheClzName = RouterProcessor.ROUTER_PACKAGE+"."+clzName;
+        String cacheClzName = MrouterProcessor.ROUTER_PACKAGE+"."+clzName;
 
         Class cacheClz=Class.forName(cacheClzName);
         Method method=cacheClz.getDeclaredMethod("findActivity",String.class);

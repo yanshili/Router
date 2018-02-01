@@ -17,8 +17,8 @@ import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
-import mrouter.annotations.RouterConfig;
-import mrouter.annotations.RouterUri;
+import mrouter.annotations.MrouterConfig;
+import mrouter.annotations.MrouterUri;
 
 
 /**
@@ -28,7 +28,7 @@ import mrouter.annotations.RouterUri;
  * 描述： 模块插槽代码生成器
  */
 @AutoService(Processor.class)
-public class RouterProcessor extends AbstractProcessor {
+public class MrouterProcessor extends AbstractProcessor {
 
     public static final String ROUTER_PACKAGE = "mrouter.compiler.generator";
     private Messager messager;
@@ -42,8 +42,8 @@ public class RouterProcessor extends AbstractProcessor {
     @Override
     public Set<String> getSupportedAnnotationTypes() {
         Set<String> types = new LinkedHashSet<>();
-        types.add(RouterUri.class.getCanonicalName());
-        types.add(RouterConfig.class.getCanonicalName());
+        types.add(MrouterUri.class.getCanonicalName());
+        types.add(MrouterConfig.class.getCanonicalName());
         return types;
     }
 
@@ -60,11 +60,11 @@ public class RouterProcessor extends AbstractProcessor {
             return false;
         }
 
-        Set<? extends Element> routerConfigE = roundEnv.getElementsAnnotatedWith(RouterConfig.class);
+        Set<? extends Element> routerConfigE = roundEnv.getElementsAnnotatedWith(MrouterConfig.class);
 
-        RouterConfig config = routerConfigE.iterator().next().getAnnotation(RouterConfig.class);
+        MrouterConfig config = routerConfigE.iterator().next().getAnnotation(MrouterConfig.class);
         if (config==null){
-            log("there is no RouterConfig annotation!!!");
+            log("there is no MrouterConfig annotation!!!");
         }
 
         String module = config.module();
@@ -73,7 +73,7 @@ public class RouterProcessor extends AbstractProcessor {
 
         String clzName = module;
 
-        Set<? extends Element> routerElements = roundEnv.getElementsAnnotatedWith(RouterUri.class);
+        Set<? extends Element> routerElements = roundEnv.getElementsAnnotatedWith(MrouterUri.class);
 
         StringBuilder sb = new StringBuilder();
         sb.append("package " + ROUTER_PACKAGE + ";\n\n");
@@ -88,7 +88,7 @@ public class RouterProcessor extends AbstractProcessor {
         sb.append("       Map<String, Class> map = new HashMap<>();\n");
 
         for (Element element : routerElements) {
-            String routerUri = scheme+element.getAnnotation(RouterUri.class).value();
+            String routerUri = scheme+element.getAnnotation(MrouterUri.class).value();
             TypeElement typeElement = (TypeElement) element;
 
             String activity = typeElement.getQualifiedName().toString();
