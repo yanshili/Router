@@ -16,12 +16,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Router.getInstance().init(this);
         findViewById(R.id.tv_main)
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Router.openUriForResult(MainActivity.this,"router://appName/app/second",3,null);
+                        Router.getInstance().open("router://appName/app/second");
                     }
                 });
     }

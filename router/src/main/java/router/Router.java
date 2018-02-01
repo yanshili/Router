@@ -4,13 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import router.compiler.RouterProcessor;
 
 /**
  * 作者： mooney
@@ -19,27 +18,66 @@ import router.compiler.RouterProcessor;
  * 描述：
  */
 
-public class Router {
-
-    private static Context mContext;
-
-    private static Map<String, Class> routerCache=new HashMap<>();
+public enum  Router {
+    INSTANCE;
 
 
-    public static boolean openUriForResult(Activity activity, String routerUri, int requestCode, Intent dataIntent) {
+    private static final String TAG="Router";
+
+    private Context mContext;
+
+    private Map<String, Class> routerCache=new HashMap<>();
+
+    public static Router getInstance(){
+        return INSTANCE;
+    }
+
+    public void init(Context context){
+        mContext=context.getApplicationContext();
+        routerCache=new HashMap<>();
+    }
+
+    public boolean open(String routerUri){
+
+        return open(routerUri, null);
+    }
+
+
+    public boolean open(String routerUri, Intent dataIntent){
+
+        if (!RouterHelper.isValidURI(routerUri)){
+            Log.e(TAG, "router \"" +routerUri+ "\" is invalid uri path!!!");
+            return false;
+        }
+
+        if (routerUri.startsWith("http://")||routerUri.startsWith("https://")){
+
+            Uri uri = Uri.parse(routerUri); // url为你要链接的地址
+//            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            dataIntent.setAction(Intent.ACTION_VIEW);
+            dataIntent.setData(uri);
+            dataIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            try {
+                mContext.startActivity(dataIntent);
+                return true;
+            } catch (Exception e) {
+                Log.e(TAG, "Errors of opening web view with the router \""+routerUri+"\"!!!\n"+e);
+                return false;
+            }
+
+        }
 
         Class activityClazz = findActivity(routerUri);
         if (activityClazz==null){
+            Log.e(TAG, "there is no activity of the router \""+routerUri+"\"!!!");
             return false;
         }
-        routerUri="test://"+routerUri;
         Uri uri = Uri.parse(routerUri);
         if (dataIntent==null){
             dataIntent=new Intent();
         }
 
-        dataIntent.setClass(activity,activityClazz);
-        dataIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        dataIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Set<String> queryParameterNames = uri.getQueryParameterNames();
         if(queryParameterNames != null && queryParameterNames.size() > 0){
             for (String key : queryParameterNames){
@@ -47,85 +85,115 @@ public class Router {
             }
         }
 
+        dataIntent.setClass(mContext,activityClazz);
         try {
-            activity.startActivityForResult(dataIntent,requestCode);
-
+            mContext.startActivity(dataIntent);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "Errors of opening the router \""+routerUri+"\"!!!\n"+e);
             return false;
         }
     }
 
-    public static Class findActivity(String router){
+    public boolean openForResult(Object context, String routerUri, int requestCode, Intent dataIntent) {
+
+        if (RouterHelper.isValidURI(routerUri)){
+            Log.e(TAG, "router \"" +routerUri+ "\" is invalid uri path!!!");
+            return false;
+        }
+
+        if (routerUri.startsWith("http://")||routerUri.startsWith("https://")){
+
+            Uri uri = Uri.parse(routerUri); // url为你要链接的地址
+//            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            dataIntent.setAction(Intent.ACTION_VIEW);
+            dataIntent.setData(uri);
+            dataIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            try {
+                mContext.startActivity(dataIntent);
+                return true;
+            } catch (Exception e) {
+                Log.e(TAG, "Errors of opening web view with the router \""+routerUri+"\"!!!\n"+e);
+                return false;
+            }
+
+        }else {
+
+            Class activityClazz = findActivity(routerUri);
+            if (activityClazz==null){
+                Log.e(TAG, "there is no activity of the router \""+routerUri+"\"!!!");
+                return false;
+            }
+            Uri uri = Uri.parse(routerUri);
+            if (dataIntent==null){
+                dataIntent=new Intent();
+            }
+
+//        dataIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Set<String> queryParameterNames = uri.getQueryParameterNames();
+            if(queryParameterNames != null && queryParameterNames.size() > 0){
+                for (String key : queryParameterNames){
+                    dataIntent.putExtra(key, uri.getQueryParameter(key));
+                }
+            }
+
+            dataIntent.setClass(mContext,activityClazz);
+        }
+
+
+
+        if (context instanceof Activity){
+            try {
+                ((Activity)context).startActivityForResult(dataIntent,requestCode);
+                return true;
+            } catch (Exception e) {
+                Log.e(TAG, "Errors of opening the router \""+routerUri+"\" for result!!!\n"+e);
+                return false;
+            }
+        }else if (context instanceof Fragment){
+            try {
+                ((Fragment)context).startActivityForResult(dataIntent,requestCode);
+                return true;
+            } catch (Exception e) {
+                Log.e(TAG, "Errors of opening the router \""+routerUri+"\" for result!!!\n"+e);
+                return false;
+            }
+        }else if (context instanceof android.app.Fragment){
+            try {
+                ((Fragment)context).startActivityForResult(dataIntent,requestCode);
+                return true;
+            } catch (Exception e) {
+                Log.e(TAG, "Errors of opening the router \""+routerUri+"\" for result!!!\n"+e);
+                return false;
+            }
+        }else {
+            Log.e(TAG, "Errors of opening the router \""+routerUri+"\" for result!!!" +
+                    "\nError:the context "+context.getClass().getCanonicalName()+" is not proper context!!!");
+            return false;
+        }
+
+    }
+
+
+    private Class findActivity(String router){
 
         Class activityClz=routerCache.get(router);
 
         if (activityClz == null){
             try {
-                String path=Uri.parse(router).getPath();
-                String clzName = path.substring(1, path.indexOf("/", 1));
-                String cacheClzName = RouterProcessor.ROUTER_PACKAGE+"."+clzName;
-
-                Class cacheClz=Class.forName(cacheClzName);
-                Method method=cacheClz.getDeclaredMethod("findActivity",String.class);
-                activityClz= (Class) method.invoke(null, router);
-
-                if (activityClz==null){
-                    throw new IllegalArgumentException(
-                            "there is no activity of the router '"+router+"'");
-                }
+                activityClz= RouterHelper.reflectActivity(router);
             } catch (Exception e) {
-//                e.printStackTrace();
+                Log.e(TAG, "Errors of reflecting the activity of the router \""+router+"\"!!!\n"+e);
+                return null;
             }
 
-            routerCache.put(router,activityClz);
+            if (activityClz!=null){
+                routerCache.put(router,activityClz);
+            }
         }
+
         return activityClz;
     }
 
-    private static boolean isValidURI(String uri) {
-        if (uri == null || uri.indexOf(' ') >= 0 || uri.indexOf('\n') >= 0) {
-            return false;
-        }
-        String scheme = Uri.parse(uri).getScheme();
-        if (scheme == null) {
-            return false;
-        }
-
-        // Look for period in a domain but followed by at least a two-char TLD
-        // Forget strings that don't have a valid-looking protocol
-        int period = uri.indexOf('.');
-        if (period >= uri.length() - 2) {
-            return false;
-        }
-        int colon = uri.indexOf(':');
-        if (period < 0 && colon < 0) {
-            return false;
-        }
-        if (colon >= 0) {
-            if (period < 0 || period > colon) {
-                // colon ends the protocol
-                for (int i = 0; i < colon; i++) {
-                    char c = uri.charAt(i);
-                    if ((c < 'a' || c > 'z') && (c < 'A' || c > 'Z')) {
-                        return false;
-                    }
-                }
-            } else {
-                // colon starts the port; crudely look for at least two numbers
-                if (colon >= uri.length() - 2) {
-                    return false;
-                }
-                for (int i = colon + 1; i < colon + 3; i++) {
-                    char c = uri.charAt(i);
-                    if (c < '0' || c > '9') {
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
-    }
 
 }
