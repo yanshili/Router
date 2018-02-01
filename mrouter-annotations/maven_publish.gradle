@@ -16,7 +16,7 @@ def pkgType = 'jar'
 group = MROUTER_GROUP
 // 版本号，//compile引用时的最后部分项目名，下次更新是只需要更改版本号即可
 version = '0.1.0'
-//上面配置后上传至JCenter后的编译路径是这样的： compile 'me.mooney:mrouter:0.2.0'
+//上面配置后上传至JCenter后的编译路径是这样的： compile 'me.mooney:mrouter-annotations:0.1.0'
 
 //生成源文件
 task sourcesJar(type: Jar) {
