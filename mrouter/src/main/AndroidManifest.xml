@@ -1,4 +1,4 @@
-<manifest package="router.lib"
+<manifest package="mrouter.lib"
 
           xmlns:android="http://schemas.android.com/apk/res/android"
 >

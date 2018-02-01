@@ -1,10 +1,10 @@
-package router.example;
+package mrouter.example;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import router.annotations.RouterUri;
+import mrouter.annotations.RouterUri;
 
 /**
  * 作者： mooney

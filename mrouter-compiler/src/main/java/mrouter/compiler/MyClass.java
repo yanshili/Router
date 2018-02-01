@@ -1,4 +1,4 @@
-package router.compiler;
+package mrouter.compiler;
 
 public class MyClass {
 }

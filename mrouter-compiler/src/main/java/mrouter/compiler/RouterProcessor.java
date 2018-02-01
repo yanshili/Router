@@ -1,4 +1,4 @@
-package router.compiler;
+package mrouter.compiler;
 
 import com.google.auto.service.AutoService;
 
@@ -17,8 +17,8 @@ import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 
-import router.annotations.RouterConfig;
-import router.annotations.RouterUri;
+import mrouter.annotations.RouterConfig;
+import mrouter.annotations.RouterUri;
 
 
 /**
@@ -30,7 +30,7 @@ import router.annotations.RouterUri;
 @AutoService(Processor.class)
 public class RouterProcessor extends AbstractProcessor {
 
-    public static final String ROUTER_PACKAGE = "router.compiler.generator";
+    public static final String ROUTER_PACKAGE = "mrouter.compiler.generator";
     private Messager messager;
 
     @Override

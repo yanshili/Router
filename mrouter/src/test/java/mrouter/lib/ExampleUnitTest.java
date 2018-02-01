@@ -1,4 +1,4 @@
-package router.lib;
+package mrouter.lib;
 
 import org.junit.Test;
 

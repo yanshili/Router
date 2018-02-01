@@ -1,12 +1,12 @@
-package router.example;
+package mrouter.example;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
-import router.Router;
-import router.annotations.RouterConfig;
-import router.annotations.RouterUri;
+import mrouter.Router;
+import mrouter.annotations.RouterConfig;
+import mrouter.annotations.RouterUri;
 
 @RouterUri("main")
 @RouterConfig(module = "app")
