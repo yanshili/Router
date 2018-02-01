@@ -14,5 +14,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
 public @interface MrouterUri {
+    //路径protocol://domain/module/xxx/xx?xx=xxx&xxx=x
     String value();
 }

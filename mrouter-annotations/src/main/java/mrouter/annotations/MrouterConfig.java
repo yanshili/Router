@@ -14,8 +14,10 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
 public @interface MrouterConfig {
-    //模块名称（routerAnnotations）
+    //模块名称（路由路径的前缀）
     String module();
+    //host
     String domain() default "appName";
+    //协议
     String protocol() default "router";
 }
