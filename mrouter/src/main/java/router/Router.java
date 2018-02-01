@@ -77,7 +77,7 @@ public enum  Router {
             dataIntent=new Intent();
         }
 
-//        dataIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        dataIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Set<String> queryParameterNames = uri.getQueryParameterNames();
         if(queryParameterNames != null && queryParameterNames.size() > 0){
             for (String key : queryParameterNames){

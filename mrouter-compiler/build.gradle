@@ -7,7 +7,7 @@ dependencies {
     compile 'com.google.auto.service:auto-service:1.0-rc2'
     compile 'com.squareup:javapoet:1.6.1'
 
-    compile project(':router-annotations')
+    compile project(':mrouter-annotations')
 }
 
 sourceCompatibility = "1.7"
@@ -17,4 +17,4 @@ tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
 
-//apply from: rootProject.file('/blockslot-annotations/maven_publish.gradle')
+//apply from: rootProject.file('/mrouter-annotations/maven_publish.gradle')

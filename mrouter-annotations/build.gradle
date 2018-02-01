@@ -11,4 +11,4 @@ tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
 
-//apply from: rootProject.file('/blockslot-annotations/maven_publish.gradle')
+//apply from: rootProject.file('/mrouter-annotations/maven_publish.gradle')
