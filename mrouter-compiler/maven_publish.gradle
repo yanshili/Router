@@ -8,7 +8,7 @@ def siteUrl = MROUTER_SITE_URL
 def gitUrl = MROUTER_GIT_URL
 
 //发布到JCenter上的项目名字，compile引用时的第2部分项目名
-def libName = "router-compiler"
+def libName = "mrouter-compiler"
 
 //打包类型
 def pkgType = 'jar'
