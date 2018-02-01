@@ -9,7 +9,7 @@ import router.annotations.RouterConfig;
 import router.annotations.RouterUri;
 
 @RouterUri("main")
-@RouterConfig(module = "app", scheme = "test://app/")
+@RouterConfig(module = "app")
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
                 .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Router.openUriForResult(MainActivity.this,"app/second",3,null);
+                        Router.openUriForResult(MainActivity.this,"router://appName/app/second",3,null);
                     }
                 });
     }

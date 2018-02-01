@@ -66,8 +66,12 @@ public class RouterProcessor extends AbstractProcessor {
         if (config==null){
             log("there is no RouterConfig annotation!!!");
         }
-        String clzName = config.module();
-        String scheme = config.scheme();
+
+        String module = config.module();
+
+        String scheme = config.protocol()+"://"+config.domain()+"/"+module+"/";
+
+        String clzName = module;
 
         Set<? extends Element> routerElements = roundEnv.getElementsAnnotatedWith(RouterUri.class);
 
@@ -78,7 +82,6 @@ public class RouterProcessor extends AbstractProcessor {
         sb.append("import java.util.Map;\n");
 
         sb.append("public class " + clzName + "{\n\n");
-
 
         sb.append("   public static Class findActivity(String router){\n");
 
@@ -92,7 +95,7 @@ public class RouterProcessor extends AbstractProcessor {
 
             sb.append("       map.put(\"" + routerUri+"\", " + activity + ".class);\n");
 
-            log("\nactivity==" + activity + "\nrouterUri==" + routerUri);
+            log("activity==" + activity + "\nrouterUri==" + routerUri);
         }
         sb.append("       return map.get(router);\n");
         sb.append("   }\n\n");
@@ -140,7 +143,7 @@ public class RouterProcessor extends AbstractProcessor {
 
     private void l(Diagnostic.Kind kind, String str) {
 
-        str = getClass().getName() + "-->" + str;
+        str = getClass().getName() + "-->\n" + str;
         //输出日志
         messager.printMessage(kind, str);
     }

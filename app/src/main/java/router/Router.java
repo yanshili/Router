@@ -59,15 +59,17 @@ public class Router {
 
     public static Class findActivity(String router){
 
-        Class activityClz=routerCache.get("test://"+router);
+        Class activityClz=routerCache.get(router);
 
         if (activityClz == null){
             try {
-                String cacheClzName= RouterProcessor.ROUTER_PACKAGE+"."+router.substring(0, router.indexOf("/"));
+                String path=Uri.parse(router).getPath();
+                String clzName = path.substring(1, path.indexOf("/", 1));
+                String cacheClzName = RouterProcessor.ROUTER_PACKAGE+"."+clzName;
 
                 Class cacheClz=Class.forName(cacheClzName);
                 Method method=cacheClz.getDeclaredMethod("findActivity",String.class);
-                activityClz= (Class) method.invoke(null, "test://"+router);
+                activityClz= (Class) method.invoke(null, router);
 
                 if (activityClz==null){
                     throw new IllegalArgumentException(
